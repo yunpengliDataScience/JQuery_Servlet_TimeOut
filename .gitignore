@@ -1,0 +1,7 @@
+/target/
+/src/main/Doc/
+*settings
+.project
+.classpath
+*.jar
+swap_*

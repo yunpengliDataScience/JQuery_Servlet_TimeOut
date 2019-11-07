@@ -1,0 +1,130 @@
+<html>
+<head>
+<link rel="stylesheet"
+	href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+<script type="text/javascript">
+	var session_expired_timer = 0;
+	var notification_timer = 0;
+	//var $dialog = null;
+	var countdown;
+
+	function resetSession() {  //TODO
+		
+		clearInterval(countdown);
+	
+		//Redirect to refresh Session.
+		//alert(window.location.href);  
+		//window.location = window.location.href;
+	};
+
+	function getContextPath() {
+		return window.location.pathname.substring(0, window.location.pathname
+				.indexOf("/", 2));
+	}
+
+	function redirectLogout() { //TODO
+
+		var contextPath = getContextPath();
+		
+		//alert(window.location.host + contextPath+"/logout.html");
+		url = window.location.protocol + "//" + window.location.host + contextPath+"/logout.html";
+		
+		window.location = url;
+		
+		//window.location="http://localhost:7777/WicketTimeOut/logout.html";
+	}
+
+	//Display timeout dialog
+	function showTimeOutDialog() {
+
+		$("#dialog").dialog({
+			autoOpen : true,
+			modal : false,
+			title : "Session Expiring",
+			buttons : {
+				Ok : function() {
+					resetSession();
+					startTimer();
+					
+					$(this).dialog('close');
+				},
+				Close : function() {
+					$(this).dialog('close');
+				}
+			}
+		});
+
+	}
+
+	function logoutRedirect() {
+		//Close the open dialog
+
+		//$(".ui-dialog-content").dialog().dialog("close");
+		//$dialog.dialog('close');
+
+		//redirect to logout page TODO
+		//alert("logout redirected.");
+
+		redirectLogout();
+	}
+
+	function startTimer() {
+
+		session_expired_timer = 6000; //TODO
+		notification_timer = 2000; //TODO
+
+		//Set up timer for displaying session timeout dialog.
+		setTimeout(showTimeOutDialog, notification_timer);
+
+		//Set up timer for redirect page to logout page.
+		//setTimeout(logoutRedirect, session_expired_timer);
+		
+		
+		var seconds = 6;
+		countdown = setInterval(function() {
+		    seconds--;
+		    
+		    if(seconds <= 0){
+		    	logoutRedirect();
+		    } 
+		    //clearInterval(countdown);
+		}, 1000);
+	}
+
+	//Start point when document is ready.
+	//Same as $(document).ready(function() {});
+	$(function() {
+
+		startTimer()
+
+	});
+
+	$(window).on("load", function() {
+		//alert("window loaded");
+		console.log("window loaded");
+	});
+</script>
+
+<style>
+
+#dialog {
+  display: none;
+}
+</style>
+
+</head>
+
+<body>
+	<center>Jquery Servlet Timeout</center>
+
+	<div id="dialog">
+		Your Session will expire in&nbsp;<span id="seconds"></span>&nbsp;seconds.<br />
+		Do you want to reset?
+	</div>
+
+</body>
+</html>
