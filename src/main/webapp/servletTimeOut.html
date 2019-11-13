@@ -8,9 +8,11 @@
 
 <script type="text/javascript">
 	
+	var sessionTimeOutSeconds = 0;
 	var session_expired_timer = 0;
 	var notification_timer = 0;
 	var remaining_seconds = 0;
+	var display_remaining_seconds = 0;
 	var countdownInterval = null;
 
 	function getContextPath() {
@@ -18,11 +20,10 @@
 				.indexOf("/", 2));
 	}
 
-	function redirectLogout() { //TODO
+	function redirectLogout() {
 
 		var contextPath = getContextPath();
 		
-		//alert(window.location.host + contextPath+"/logout.html");
 		url = window.location.protocol + "//" + window.location.host + contextPath+"/logout.html";
 		
 		window.location = url;
@@ -51,14 +52,21 @@
 	}
 
 	function logoutRedirect() {
-		//Close the open dialog
-
-		//$(".ui-dialog-content").dialog().dialog("close");
-		//$dialog.dialog('close');
-
+		
 		redirectLogout();
 	}
 
+	function retrieveSessionTimeOut(data){
+		//alert(data);
+		
+		//JSon object: {"sessionTimeOut": xx }
+		jsonObj = jQuery.parseJSON(data);
+		
+		//reset sessionTimeOutSeconds
+		sessionTimeOutSeconds = parseInt(jsonObj.sessionTimeOut);
+		//alert("sessionTimeOutSeconds="+sessionTimeOutSeconds);
+	}
+	
 	function refreshSessionStartTimer() {
 		
 		if(countdownInterval != null){
@@ -67,11 +75,19 @@
 			clearInterval(countdownInterval);
 		}
 		  
-
-		display_remaining_seconds = 5; //the last seconds for display
-		remaining_seconds = 10;  //Set up count down timer for redirecting page to logout page if no action is detected.
-		session_expired_timer = remaining_seconds * 1000; //milliseconds (10 seconds)
+		//Refresh Session.
+		initSessionTimeOut();
+		
+		//Set up count down timer for redirecting page to logout page if no action is detected.
+		display_remaining_seconds = 30; //the last seconds for display
+		session_expired_timer = sessionTimeOutSeconds * 1000; //milliseconds
+		remaining_seconds = sessionTimeOutSeconds;
 		notification_timer = session_expired_timer - display_remaining_seconds * 1000; // The time when notification popup shows up.
+		
+		//alert("session_expired_timer="+session_expired_timer);
+		//alert("notification_timer="+notification_timer);
+		//alert("remaining_seconds="+remaining_seconds);
+		//alert("display_remaining_seconds="+display_remaining_seconds);
 
 		//Set up timer for displaying session timeout dialog.
 		setTimeout(showTimeOutDialog, notification_timer);
@@ -92,18 +108,32 @@
 		}, 1000);
 	}
 
+	function initSessionTimeOut(){
+		
+		var contextPath = getContextPath();
+		
+		servletUrl = window.location.protocol + "//" + window.location.host + contextPath + "/sessionTimeOutRetrievalServlet";
+	
+		//alert(servletUrl);
+		
+		//Use ajax to touch the session and get the session timeout value from the sever.
+        jQuery.ajax({
+            url: servletUrl,
+            success: function (result) {
+            	retrieveSessionTimeOut(result);
+            },
+            async: false
+        });
+	}
+	
 	//Start point when document is ready.
 	//Same as $(document).ready(function() {});
 	$(function() {
 
-		refreshSessionStartTimer()
+		refreshSessionStartTimer();
 
 	});
 
-	$(window).on("load", function() {
-		//alert("window loaded");
-		console.log("window loaded");
-	});
 </script>
 
 <style>
@@ -116,13 +146,12 @@
 </head>
 
 <body>
-	
 	<center>
-		<h1>Welcome!</h1>
+		<h1>Jquery Servlet Timeout</h1>
 		<br/>
 		<h1>Seconds Left Since Session Refreshed: <span id="timeLeft"/></h1>
 	</center>
-
+	
 	<div id="dialog">
 		Your session will expire in&nbsp;<span id="seconds"></span>&nbsp;seconds.<br />
 		Do you want to reset?

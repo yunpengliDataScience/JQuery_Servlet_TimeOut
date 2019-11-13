@@ -6,10 +6,22 @@
 	id="WebApp_ID" version="2.5">
 
 	<welcome-file-list>
-		<welcome-file>index.html</welcome-file>
+		<!-- <welcome-file>index.html</welcome-file> -->
+		<welcome-file>servletTimeOut.html</welcome-file>
 	</welcome-file-list>
 
 	<session-config>
 		<session-timeout>1</session-timeout>
 	</session-config>
+
+	<servlet>
+		<description>Servlet for getting session timeout</description>
+		<servlet-name>sessionTimeOutRetrievalServlet</servlet-name>
+		<servlet-class>org.dragon.yunpeng.servlet.SessionTimeOutRetrievalServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>sessionTimeOutRetrievalServlet</servlet-name>
+		<url-pattern>/sessionTimeOutRetrievalServlet</url-pattern>
+	</servlet-mapping>
 </web-app>
