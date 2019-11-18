@@ -1,10 +1,14 @@
 <html>
 <head>
-<link rel="stylesheet"
-	href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-
+<!--  
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+-->
+
+<link rel="stylesheet" href="jquery-ui-1.12.1/jquery-ui.css">
+<script src="jquery-ui-1.12.1/external/jquery/jquery.js"></script>
+<script src="jquery-ui-1.12.1/jquery-ui.js"></script>
 
 <script type="text/javascript">
 	
@@ -109,9 +113,10 @@
 		countdownInterval = setInterval(function() {
 			remaining_seconds--;
 			
-			//Display remaining seconds instantly.
+			//Display remaining seconds instantly dialog box.
 			$("#seconds").html(remaining_seconds);
 			
+			//Display remaining seconds instantly on page.
 			$("#timeLeft").html(remaining_seconds);
 			
 		    if(remaining_seconds <= 0){
