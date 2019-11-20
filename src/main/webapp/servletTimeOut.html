@@ -6,7 +6,7 @@
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 -->
 
-<link rel="stylesheet" href="jquery-ui-1.12.1/jquery-ui.css">
+<link rel="stylesheet" href="jquery-ui-1.12.1/jquery-ui.css"/>
 <script src="jquery-ui-1.12.1/external/jquery/jquery.js"></script>
 <script src="jquery-ui-1.12.1/jquery-ui.js"></script>
 
@@ -42,6 +42,7 @@
 			autoOpen : true,
 			modal : true,
 			title : "Session Expiring",
+			dialogClass: 'sessionTimeOutDialogClass',
 			buttons : {
 				Ok : function() {
 					refreshSessionStartTimer();
@@ -158,9 +159,27 @@
 
 <style>
 
-#dialog {
-  display: none;
-}
+	#dialog {
+	  display: none;
+	}
+	
+	.ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset{ 
+		text-align: center;
+	 	float: none;
+	}
+	
+	.sessionTimeOutDialogClass .ui-dialog-titlebar{
+	    background:rgb(204, 0, 51);
+	}
+	
+	.sessionTimeOutDialogClass .ui-dialog-titlebar-close{
+		display: none;
+	}
+	
+	/*make dialog appear on the top layer*/
+	.sessionTimeOutDialogClass{
+		z-index: 40000; 
+	}
 </style>
 
 </head>
